@@ -1,0 +1,17 @@
+{
+  "_como_editar": "Para incluir ou tirar alguém, edite esta lista (ou peça ao Claude). 'ativo': false pausa sem apagar. 'handle' é o caminho do canal no YouTube (@handle ou channel/UC...). 'lang' é a língua do canal para o Whisper (padrão pt). Quem entra por sugestão do sistema precisa ser canal consolidado de futebol (jornalista, comentarista ou criador com anos de canal e audiência medida), nunca emergente, nunca canal de aposta; a sugestão vem no bot e só entra com o ok do Nei.",
+  "_ranking": "Medição própria com yt-dlp em 26/10/2026: mediana de views dos últimos 15 vídeos, canal ativo e falado (notícia/opinião, não melhores momentos). Ver pesquisa/canais.md. Fechado pelo Nei em 26/10/2026.",
+  "_nota_neutralidade": "Vários canais são opinativos e alguns puxam para um clube (Chico Garcia: Corinthians). O roteiro relata e atribui, sem torcer por clube; rumor de transferência é rumor até o clube confirmar; nada de aposta (auto/roteiro.md).",
+  "canais": [
+    {"handle": "channel/UCwSnqMoMhWa3AWn3WEFpF-Q", "nome": "Eurão", "rk": "FUTEBOL EUROPEU", "ativo": true},
+    {"handle": "channel/UCv-Nx8pSfG_LxbViMz14RWQ", "nome": "Jovem Pan Esportes", "rk": "NOTÍCIAS E DEBATE", "ativo": true},
+    {"handle": "channel/UC-CwKK7xheUkH1mqtZhkwkQ", "nome": "Jozão", "rk": "OPINIÃO · JOGOS", "ativo": true},
+    {"handle": "channel/UCX1em-uaFMS02Rrk_Bowyng", "nome": "Fabrizio Romano", "rk": "MERCADO MUNDIAL", "lang": "en", "ativo": true},
+    {"handle": "channel/UC9nH0tJpMtChvJOqpMA9AHA", "nome": "Chico Garcia", "rk": "BRASILEIRÃO · OPINIÃO", "ativo": true},
+    {"handle": "channel/UCflhYB5hOiPxdjoG4EtSUKA", "nome": "Tode", "rk": "MERCADO DA BOLA", "ativo": true},
+    {"handle": "@fredcaldeira", "nome": "Fred Caldeira", "rk": "EUROPEU · OPINIÃO", "ativo": true},
+    {"handle": "channel/UCrjGdg8E4Zcs9Hj2kNGyMHA", "nome": "TiaGOL", "rk": "ANÁLISE · NEGÓCIOS", "ativo": true},
+    {"handle": "channel/UCx0RRbF4EJOUQ28SurIU7Eg", "nome": "Canal do Nicola", "rk": "MERCADO · BASTIDORES", "ativo": true},
+    {"handle": "channel/UCRcRAyb5Y4x3HVNKBZ9SMLA", "nome": "Mauro Cezar", "rk": "OPINIÃO · POLÊMICA", "ativo": true}
+  ]
+}
