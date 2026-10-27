@@ -6,6 +6,7 @@ After=network-online.target explicavideos-display.service
 Type=oneshot
 Environment=PATH=%h/.local/bin:%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin
 Environment=DISPLAY=:99
+Environment=PUBLICAR_AS=12:00
 ExecStart=/bin/bash %h/projetos/futviral/auto/rodar.sh domingo
 TimeoutStartSec=10h
 MemoryMax=60G

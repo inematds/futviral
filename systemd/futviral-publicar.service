@@ -1,0 +1,9 @@
+[Unit]
+Description=futviral — publica no lives12 o que a geração das 9h deixou pronto
+After=network-online.target
+
+[Service]
+Type=oneshot
+Environment=PATH=%h/.local/bin:%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/bin/bash %h/projetos/futviral/auto/publicar-pendente.sh
+TimeoutStartSec=3h

@@ -11,6 +11,19 @@ V="$1"; E="$(cd "$2" && pwd)"; ROT="$3"; EXTRA="${4:-}"
 PL="$E/publicar-$(printf %s "$ROT" | tr -c 'A-Za-z0-9-' _).log"  # o rótulo traz a data dd/mm/aaaa: barra no nome quebrava o log (10/10/2026)
 BOT="$HOME/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs"
 DRY=""; [ "${SEM_BOT:-}" = 1 ] && DRY=--dry-run
+# Publicação adiada (Nei, 26/10/2026: "a publicação pode ser meio-dia, já a geração às 9 da manhã").
+# Com PUBLICAR_AS=HH:MM (vem do serviço), o vídeo pronto vai ao bot como PRÉVIA e fica pendente;
+# o auto/publicar-pendente.sh (timer das 12:00) publica no lives12. Para segurar: crie <ed>/SEGURAR.
+if [ -n "${PUBLICAR_AS:-}" ] && [ "${SEM_YT:-}" != 1 ] && [ -z "${PUBLICANDO_PENDENTE:-}" ]; then
+  printf '%s\n%s\n%s\n' "$V" "$ROT" "$EXTRA" > "$E/PUBLICAR_PENDENTE.$(basename "$V" .mp4)"
+  VP="$V"; if [ "$(stat -c %s "$V")" -gt 48000000 ]; then VP="${V%.mp4}-720p.mp4"
+    ffmpeg -v error -y -i "$V" -vf "scale=-2:720" -c:v libx264 -crf 27 -preset medium -c:a aac -b:a 128k -movflags +faststart "$VP"; fi
+  rm -f "$VP.envio-v3.json"
+  node "$BOT" $DRY "$VP" "futviral · PRÉVIA · $ROT
+Vai ao ar às $PUBLICAR_AS no lives12 (Inema Pro). Para segurar: touch $E/SEGURAR
+$(head -c 500 "$E/legenda.txt")$EXTRA" || echo "falhou o envio da prévia"
+  echo "pendente: publica às $PUBLICAR_AS"; exit 0
+fi
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$V" | cut -d. -f1)
 W=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$V")
 TIT=$(head -1 "$E/legenda.txt" | cut -c1-90)

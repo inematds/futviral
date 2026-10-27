@@ -6,7 +6,8 @@ Conta/autor: `inematds <inematds@gmail.com>`, repo `inematds/futviral`. Fluxo e 
 - Canal: **Inema Pro (lives12)**, por `auto/publicar.sh` (yt-pubx), e SEMPRE ao bot v3 com o link. A versão com foto (avatar falhou ou teste `SEM_AVATAR=1`) só vai ao bot.
 - Influenciadores em `canais.json` (só YouTube; `lang: en` para o Fabrizio Romano, o Whisper transcreve em inglês). O Nei inclui/exclui. Eu posso SUGERIR canal consolidado de futebol (nunca emergente, nunca de aposta); só entra com ok dele.
 - Regras de futebol (no roteiro e no `checar.py`): todo fato tem trecho literal no base.md; tudo atribuído; rumor é rumor até o clube confirmar; sem torcer por clube; sem aposta (o portão reprova bet/odd/palpite); sem lance, gol ou escudo (direito de transmissão); "Rumor só vale quando o clube confirma." obrigatório.
-- Agenda (systemd usuário, `systemd/`): ainda NÃO ligada. Horário a definir com o Nei (finviral 02:00, saudeviral 05:00, advviral 08:00 já usam GPU/HeyGen).
+- Agenda (Nei, 26/10/2026): GERAÇÃO às 09:00 (diário seg–sex, semanal sáb, domingo dom; `PUBLICAR_AS=12:00` no serviço) → o vídeo vai ao bot como PRÉVIA e fica `<ed>/PUBLICAR_PENDENTE.*`; PUBLICAÇÃO às 12:00 (`futviral-publicar.timer` → `auto/publicar-pendente.sh`). `touch <ed>/SEGURAR` impede a publicação.
+- Transcrição (Nei, 26/10/2026, "usando o yt quando tiver"): legenda do YouTube primeiro (`coleta/transcrever.sh` + `coleta/legenda_yt.py`, uma língua por pedido — várias seguidas dão 429), Whisper local só se não houver legenda. `<tx>/<id>/fonte` diz qual foi usada.
 - Avatar: HeyGen pelo ESTÚDIO (assinatura, `motor/avatar_heygen.sh`, trava compartilhada). Títulos `FUTVIRAL-…`. Oferta de troca de plano do HeyGen: SEMPRE recusar.
 - Referência de formato: `edicoes/referencia/` é de um projeto irmão; trocar por uma edição do futviral aprovada pelo Nei.
 

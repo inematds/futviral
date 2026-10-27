@@ -1,8 +1,8 @@
 [Unit]
-Description=futviral — domingo às 05:00
+Description=futviral — domingo às 09:00
 
 [Timer]
-OnCalendar=Sun *-*-* 08:00:00
+OnCalendar=Sun *-*-* 09:00:00
 Persistent=false
 
 [Install]

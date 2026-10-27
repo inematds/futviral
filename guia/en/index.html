@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>futviral — YouTube's football radar in 3 minutes</title>
+<meta name="description" content="futviral: a system that transcribes the videos of the 10 biggest football channels on YouTube and builds, on its own, a 9:16 video with the facts, the source on screen and Nei commenting. A rumor is a rumor, no betting and no taking sides.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/futviral/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/futviral/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/futviral/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#E2A23B; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#b9791d; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(226,162,59,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:760px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(226,162,59,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(226,162,59,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">⚽</span> futviral</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">What it is</a>
+    <a class="sec" href="#fluxo">How it works</a>
+    <a class="sec" href="#canais">The 10 channels</a>
+    <a class="sec" href="#guia">User guide</a>
+    <a class="sec" href="#regras">Rules</a>
+    <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    <a class="btn" href="https://github.com/inematds/futviral" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">9:16 video · Football · automatic</span>
+      <h1>What YouTube's football channels said, in <span class="amb">3 minutes</span></h1>
+      <p class="lead">The 10 biggest football channels on YouTube (Brasileirão, European football, the transfer market and controversies), transcribed, checked and summed up in a video with the source on screen and Nei commenting.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Start the guide</a>
+        <a class="btn ghost" href="https://github.com/inematds/futviral" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-en.jpg" alt="FOOTBALL RADAR banner: what the 10 biggest football channels on YouTube said, in 3 minutes"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">In short</span>
+  <p>futviral is a system that makes, on its own, vertical videos (9:16) of 2 to 3 minutes summing up what the 10 biggest football channels on YouTube said: Brasileirão, European football, the transfer market, controversies and the business of football. It "watches" the videos through their transcripts, pulls out the facts and numbers with the source of each one, and builds a video with big numbers, stamps (RUMOR, NEGOCIANDO, FECHADO, POLÊMICA — rumor, negotiating, done deal, controversy) and Nei commenting (avatar). A rumor is treated as a rumor, no club gets a side and betting is left out. It's for anyone who wants to know, in a few minutes, what the main channels are talking about. It runs on a computer with a GPU, using the Claude Code and HeyGen subscriptions.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">What it is</span>
+  <h2>A football radar that builds itself</h2>
+  <p class="sub">futviral reads what the channels published, checks every fact against the transcript and publishes a finished video. The video reports what each channel said, always with the source, without rooting for anyone.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-en.jpg" alt="futviral flow: collection, transcription, script, check, avatar and publishing" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>🔎 Only facts with a source</h3><p>Every fact or number must be in the transcript, with the literal excerpt. Channel, date and title appear on screen. Scores, transfer fees and release clauses only go in if the channel said them.</p></div>
+    <div class="card"><h3>📰 A rumor is a rumor</h3><p>A signing, departure or coach sacking only becomes "fechado" (done deal) when the club confirms it; before that it's "rumor" or "negociando" (negotiating). Everything is attributed to whoever said it, with no rooting. Betting is left out.</p></div>
+    <div class="card"><h3>🔒 All through the subscription</h3><p>Script with <code>claude -p</code> (subscription, no API), local transcription with Whisper and avatar through the HeyGen studio. HeyGen's plan-change offer is always declined.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">How it works</span>
+  <h2>From transcript to YouTube, with no human hand in between</h2>
+  <p class="sub">Steps chained by <code>auto/rodar.sh</code>. If the check fails twice, the video is not made. A slow day doesn't become a video either: the bot gets "sem pauta" (nothing to report).</p>
+  <div class="flow">
+    <span>Collection</span><span class="arr">→</span>
+    <span>Transcription</span><span class="arr">→</span>
+    <span>Script</span><span class="arr">→</span>
+    <span>Check</span><span class="arr">→</span>
+    <span>Avatar</span><span class="arr">→</span>
+    <span>Video</span><span class="arr">→</span>
+    <span>YouTube + bot</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><div class="num">1</div><h3>Collection and transcription</h3><p>Lists the videos from the channels in <code>canais.json</code> (metadata only, yt-dlp), picks the most viewed from each channel first (up to 3 per channel, never repeating a video already used and skipping videos/lives over 75 min), downloads the audio and transcribes it locally (inemavox, Whisper large-v3; in English for Fabrizio Romano).</p></div>
+    <div class="card"><div class="num">2</div><h3>Script</h3><p><code>claude -p</code> reads the transcripts and writes <code>base.md</code> (each fact, who said it, the video and the literal excerpt), <code>roteiro.json</code> (lines and visuals) and <code>legenda.txt</code>.</p></div>
+    <div class="card"><div class="num">3</div><h3>Check</h3><p><code>auto/checar.py</code> checks the excerpts against the transcript, numbers spelled out in words in the speech, at least 5 topics, the notice "Rumor só vale quando o clube confirma." (A rumor only counts when the club confirms it.), the inema.club CTA, and rejects any line about betting. If it fails: it goes back once for correction.</p></div>
+    <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen generates Nei's avatar through the studio (subscription). If it fails, a version with Nei's photo and voice comes out, which only goes to the bot.</p></div>
+    <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> is rendered frame by frame by Playwright, with counters, stamps and the source on screen. The image is the thumbnail of the channel's video: plays, goals and club crests are left out.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publishing</h3><p><code>auto/publicar.sh</code> publishes to YouTube Inema Pro (lives12) through <code>yt-pubx</code> and always sends it to bot v3, with the link.</p></div>
+  </div>
+</div></section>
+
+<section id="agenda"><div class="wrap">
+  <span class="chip">Runs</span>
+  <h2>Three kinds of run</h2>
+  <p class="sub">Each run is a mode of <code>auto/rodar.sh</code>. The timers are in <code>systemd/</code>, but the schedule is not switched on yet: the time will be agreed so it doesn't compete for the GPU and HeyGen with the sibling projects.</p>
+  <div class="phase"><div class="tag">Daily</div><div class="d"><strong><code>diario</code> run</strong><span>The summary of the ten, 2 to 3 minutes: yesterday's and the day before's videos not used yet, with at least five topics (one per channel whenever possible). If fewer than five channels published in those two days, the window widens to five days.</span></div></div>
+  <div class="phase"><div class="tag">Saturday</div><div class="d"><strong><code>semanal</code> run</strong><span>Review of the week (the 7 days up to yesterday), 2 to 3 minutes. Then the long 16:9 "A semana explicada" (The week explained) (5.5 to 7 minutes).</span></div></div>
+  <div class="phase"><div class="tag">Sunday</div><div class="d"><strong><code>domingo</code> run</strong><span>What the channels expect for the coming week (big derbies, deciding matches, coaches under pressure, negotiations), 2 to 3 minutes. Then the long 16:9 explained video (5.5 to 7 minutes).</span></div></div>
+</div></section>
+
+<section id="canais"><div class="wrap">
+  <span class="chip">The 10 channels</span>
+  <h2>Who futviral follows</h2>
+  <p class="sub">Chosen on 10/26/2026 by our own measurement (yt-dlp, median views of the last 15 videos, active channel with spoken content). Highlight channels, fan-reaction channels and betting channels were left out. Details in <a href="https://github.com/inematds/futviral/blob/main/pesquisa/canais.md" target="_blank" rel="noopener"><code>pesquisa/canais.md</code></a> (in Portuguese).</p>
+  <div class="grid g3">
+    <div class="card"><h3>🌍 European football and the global market</h3><p>Eurão (recaps and stories from European football), Fabrizio Romano (global transfer market, in English) and Fred Caldeira (European football and opinion).</p></div>
+    <div class="card"><h3>📺 News, debate and opinion</h3><p>Jovem Pan Esportes (news and debate), Jozão (opinion on the matches), Chico Garcia (Brasileirão) and Mauro Cezar (opinion and controversy).</p></div>
+    <div class="card"><h3>💼 Transfer market and business</h3><p>Tode (daily transfer market), Canal do Nicola (Brazilian market and behind the scenes) and TiaGOL (analysis and the business of football).</p></div>
+  </div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Prerequisites</span>
+  <h2>What needs to be on the machine</h2>
+  <p class="sub">futviral is not a standalone app: it uses other tools from the INEMA ecosystem, all in <code>~/projetos/</code>, on a computer with a GPU. The repository lives in <code>~/projetos/futviral</code> (the systemd timers and the links point there).</p>
+  <div class="grid g3">
+    <div class="card"><h3>Collection and transcription</h3><p><code>yt-dlp</code> to list and download. <strong>inemavox</strong> (<code>~/projetos/inemavox</code>, with <code>baixar_v1.py</code> and <code>transcrever_v1.py</code>) is the local download and transcription kit with Whisper.</p></div>
+    <div class="card"><h3>Render</h3><p>Node with Playwright and ffmpeg. <code>motor/node_modules</code> is a link to <code>~/projetos/eventosextremospub/motor/node_modules</code>; without that project, run <code>npm install playwright</code> in <code>motor/</code>.</p></div>
+    <div class="card"><h3>Script</h3><p><code>claude</code> (Claude Code logged in with the subscription, called as <code>claude -p</code>). The weekend long video uses the <code>~/projetos/explicavideos/engine/v2</code> engine.</p></div>
+    <div class="card"><h3>Avatar and voice</h3><p>The HeyGen studio open in a browser on a virtual screen (Xvfb <code>:99</code>), with the explicavideos project's already logged-in profile. Without it, the run comes out with Nei's photo and cloned voice (Chatterbox, voice <code>nei</code>, through the <code>~/projetos/cardshorts</code> project).</p></div>
+    <div class="card"><h3>Publishing</h3><p><strong>yt-pubx</strong> (<code>~/projetos/yt-pubx</code>), the tool that publishes to YouTube; <strong>lives12</strong> is its name for the Inema Pro channel.</p></div>
+    <div class="card"><h3>Telegram notice</h3><p><strong>bot v3</strong> is Nei's Telegram bot that receives every video and notice, through the script <code>~/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs</code>.</p></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">User guide · step by step</span>
+  <h2>Choose the channels, test and run</h2>
+  <p class="sub">Real commands from the repository, run from the project root.</p>
+  <div class="step"><div class="b">1</div><div>
+    <h3>Choose the channels</h3>
+    <p>The list is in <code>canais.json</code>. To pause a channel without deleting it, use <code>"ativo": false</code>. The <code>handle</code> is the channel's path on YouTube and <code>lang</code> is the channel's language for Whisper (default pt).</p>
+    <pre>{<span class="s">"handle"</span>: <span class="s">"channel/UCX1em-uaFMS02Rrk_Bowyng"</span>, <span class="s">"nome"</span>: <span class="s">"Fabrizio Romano"</span>, <span class="s">"rk"</span>: <span class="s">"MERCADO MUNDIAL"</span>, <span class="s">"lang"</span>: <span class="s">"en"</span>, <span class="s">"ativo"</span>: true}</pre>
+    <p>If another established football channel stands out, the system suggests adding it in the bot message (never an up-and-coming channel or a betting one). It only goes in with Nei's OK.</p>
+  </div></div>
+  <div class="step"><div class="b">2</div><div>
+    <h3>Test without the avatar and without publishing</h3>
+    <p>Do a run without HeyGen, without the long video and without sending to the bot or to YouTube. It still uses <code>claude -p</code> (subscription quota), downloads the audio and keeps the GPU busy with Whisper. The terminal stays quiet: the output goes to the edition's log.</p>
+    <pre><span class="k">SEM_AVATAR=1 SEM_BOT=1 SEM_LONGO=1 auto/rodar.sh</span> diario   <span class="c"># test: no HeyGen, no long video and nothing sent</span>
+<span class="k">tail -f</span> edicoes/$(date +%F)-diario/rodada.log              <span class="c"># follow along</span></pre>
+    <p>The <code>edicoes/AAAA-MM-DD-diario/</code> folder holds <code>base.md</code>, <code>roteiro.json</code>, <code>legenda.txt</code>, <code>checar.log</code> and the finished video (<code>video.mp4</code>).</p>
+  </div></div>
+  <div class="step"><div class="b">3</div><div>
+    <h3>Run by hand</h3>
+    <p>Pass the mode and the date. The full run generates the avatar, publishes to lives12 and sends to the bot.</p>
+    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># full run (avatar + lives12 + bot)</span>
+<span class="k">SEM_AVATAR=1 auto/rodar.sh</span> diario 2026-10-26      <span class="c"># photo version, bot only</span>
+<span class="k">REUSAR_ROTEIRO=1 auto/rodar.sh</span> diario 2026-10-26  <span class="c"># redo avatar/video/publishing with the script already approved</span>
+<span class="k">VALIDAR=1 auto/rodar.sh</span> diario 2026-10-26        <span class="c"># test edition (-validacao folder), never goes to YouTube</span></pre>
+  </div></div>
+  <div class="step"><div class="b">4</div><div>
+    <h3>Skip a run</h3>
+    <p>Add the date and the mode to <code>auto/pular.txt</code>.</p>
+    <pre><span class="k">echo</span> <span class="s">"2026-11-01 semanal"</span> &gt;&gt; auto/pular.txt   <span class="c"># skip a run</span></pre>
+  </div></div>
+  <div class="step"><div class="b">5</div><div>
+    <h3>Turn on the schedule (once the time is agreed)</h3>
+    <p>Adjust the timers' <code>OnCalendar</code> in <code>systemd/</code>, copy the units to the user systemd and enable all three.</p>
+    <pre><span class="k">cp</span> systemd/futviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
+<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer
+<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span></pre>
+  </div></div>
+  <div class="step"><div class="b">6</div><div>
+    <h3>Follow along on Telegram and YouTube</h3>
+    <p>Each run publishes to Inema Pro (lives12) and sends the video to bot v3 with the link. If there's nothing to report or something fails, the bot gets the notice.</p>
+  </div></div>
+</div></section>
+
+<section id="regras"><div class="wrap">
+  <span class="chip">Rules for every video</span>
+  <h2>What every video follows</h2>
+  <p class="sub">The script and the check gate follow these rules.</p>
+  <div class="grid g3">
+    <div class="card"><h3>📌 Source on screen</h3><p>Only facts that are in the transcript go in, with channel, date and title on screen and the literal excerpt in <code>base.md</code>.</p></div>
+    <div class="card"><h3>📰 A rumor is a rumor</h3><p>"Rumor só vale quando o clube confirma." (A rumor only counts when the club confirms it.) in every video; a transfer is "rumor" or "negociando" (negotiating) until the club confirms it.</p></div>
+    <div class="card"><h3>⚖️ No rooting</h3><p>Everything is attributed to whoever said it. A controversy is what THEY said; no club gets a side.</p></div>
+    <div class="card"><h3>🚫 No betting</h3><p>No bets, odds or tips. The gate rejects the line.</p></div>
+    <div class="card"><h3>📺 No match footage</h3><p>Plays, goals, match images and club crests are left out (broadcast rights). The screen uses numbers, tables, stamps and the thumbnail of the channel's video.</p></div>
+    <div class="card"><h3>🗣️ Nei's tone and CTA</h3><p>Spoken in Nei's tone (addressing the viewer as "você"), with numbers spelled out in words. At the end, a question to comment on and the inema.club CTA.</p></div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">yt-dlp + Whisper</div><div class="pill">Claude Code</div><div class="pill">Playwright + ffmpeg</div><div class="pill">HeyGen (studio)</div>
+    <p style="margin-top:18px">futviral · a rumor only counts when the club confirms it · quoted content belongs to the original channels · MIT license ·
+      <a href="https://github.com/inematds/futviral">inematds/futviral</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='futviral-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    try{ if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; } }catch(e){}
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      try{ localStorage.setItem(KEY, light?'light':'dark'); }catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>
