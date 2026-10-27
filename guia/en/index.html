@@ -170,19 +170,19 @@
     <span>YouTube + bot</span>
   </div>
   <div class="grid g3" style="margin-top:26px">
-    <div class="card"><div class="num">1</div><h3>Collection and transcription</h3><p>Lists the videos from the channels in <code>canais.json</code> (metadata only, yt-dlp), picks the most viewed from each channel first (up to 3 per channel, never repeating a video already used and skipping videos/lives over 75 min), downloads the audio and transcribes it locally (inemavox, Whisper large-v3; in English for Fabrizio Romano).</p></div>
+    <div class="card"><div class="num">1</div><h3>Collection and transcription</h3><p>Lists the videos from the channels in <code>canais.json</code> (metadata only, yt-dlp), picks the most viewed from each channel first (up to 3 per channel, never repeating a video already used and skipping videos/lives over 75 min), takes the YouTube caption and, if there isn't one, downloads the audio and transcribes it locally (inemavox, Whisper large-v3; in English for Fabrizio Romano).</p></div>
     <div class="card"><div class="num">2</div><h3>Script</h3><p><code>claude -p</code> reads the transcripts and writes <code>base.md</code> (each fact, who said it, the video and the literal excerpt), <code>roteiro.json</code> (lines and visuals) and <code>legenda.txt</code>.</p></div>
     <div class="card"><div class="num">3</div><h3>Check</h3><p><code>auto/checar.py</code> checks the excerpts against the transcript, numbers spelled out in words in the speech, at least 5 topics, the notice "Rumor só vale quando o clube confirma." (A rumor only counts when the club confirms it.), the inema.club CTA, and rejects any line about betting. If it fails: it goes back once for correction.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen generates Nei's avatar through the studio (subscription). If it fails, a version with Nei's photo and voice comes out, which only goes to the bot.</p></div>
     <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> is rendered frame by frame by Playwright, with counters, stamps and the source on screen. The image is the thumbnail of the channel's video: plays, goals and club crests are left out.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publishing</h3><p><code>auto/publicar.sh</code> publishes to YouTube Inema Pro (lives12) through <code>yt-pubx</code> and always sends it to bot v3, with the link.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publishing</h3><p>On the schedule, the finished video first goes to bot v3 as a preview; at noon <code>auto/publicar-pendente.sh</code> publishes it to YouTube Inema Pro (lives12) through <code>yt-pubx</code> and sends the link to the bot.</p></div>
   </div>
 </div></section>
 
 <section id="agenda"><div class="wrap">
   <span class="chip">Runs</span>
   <h2>Three kinds of run</h2>
-  <p class="sub">Each run is a mode of <code>auto/rodar.sh</code>. The timers are in <code>systemd/</code>, but the schedule is not switched on yet: the time will be agreed so it doesn't compete for the GPU and HeyGen with the sibling projects.</p>
+  <p class="sub">Each run is a mode of <code>auto/rodar.sh</code>. The schedule (timers in <code>systemd/</code>) is on: generation runs at 09:00 and publishing at 12:00, outside the hours of the sibling projects that use the same GPU and the same HeyGen.</p>
   <div class="phase"><div class="tag">Daily</div><div class="d"><strong><code>diario</code> run</strong><span>The summary of the ten, 2 to 3 minutes: yesterday's and the day before's videos not used yet, with at least five topics (one per channel whenever possible). If fewer than five channels published in those two days, the window widens to five days.</span></div></div>
   <div class="phase"><div class="tag">Saturday</div><div class="d"><strong><code>semanal</code> run</strong><span>Review of the week (the 7 days up to yesterday), 2 to 3 minutes. Then the long 16:9 "A semana explicada" (The week explained) (5.5 to 7 minutes).</span></div></div>
   <div class="phase"><div class="tag">Sunday</div><div class="d"><strong><code>domingo</code> run</strong><span>What the channels expect for the coming week (big derbies, deciding matches, coaches under pressure, negotiations), 2 to 3 minutes. Then the long 16:9 explained video (5.5 to 7 minutes).</span></div></div>
@@ -254,15 +254,16 @@
     <pre><span class="k">echo</span> <span class="s">"2026-11-01 semanal"</span> &gt;&gt; auto/pular.txt   <span class="c"># skip a run</span></pre>
   </div></div>
   <div class="step"><div class="b">6</div><div>
-    <h3>Turn on the schedule (once the time is agreed)</h3>
-    <p>Adjust the timers' <code>OnCalendar</code> in <code>systemd/</code>, copy the units to the user systemd and enable all three.</p>
+    <h3>Turn on the schedule and hold a publication</h3>
+    <p>Generation at 09:00 (diario Monday to Friday, semanal on Saturday, domingo on Sunday) and publishing at 12:00. Copy the units to the user systemd and enable the four timers. To hold the publication of a video that already went to the bot as a preview, create the file <code>SEGURAR</code> (hold) in the edition folder.</p>
     <pre><span class="k">cp</span> systemd/futviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
-<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer
-<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span></pre>
+<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer futviral-publicar.timer
+<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span>
+<span class="k">touch</span> edicoes/2026-10-27-diario/SEGURAR   <span class="c"># don't publish this edition at 12:00</span></pre>
   </div></div>
   <div class="step"><div class="b">7</div><div>
     <h3>Follow along on Telegram and YouTube</h3>
-    <p>Each run publishes to Inema Pro (lives12) and sends the video to bot v3 with the link. If there's nothing to report or something fails, the bot gets the notice.</p>
+    <p>On the schedule, bot v3 gets the preview at 09:00 and the Inema Pro (lives12) link after noon. A run by hand (step 4) publishes right away. If there's nothing to report or something fails, the bot gets the notice.</p>
   </div></div>
 </div></section>
 

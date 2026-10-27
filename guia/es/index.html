@@ -170,19 +170,19 @@
     <span>YouTube + bot</span>
   </div>
   <div class="grid g3" style="margin-top:26px">
-    <div class="card"><div class="num">1</div><h3>Recolección y transcripción</h3><p>Lista los videos de los canales de <code>canais.json</code> (solo metadatos, yt-dlp), elige primero el más visto de cada canal (hasta 3 por canal, sin repetir un video ya usado y saltando videos/lives de más de 75 min), descarga el audio y lo transcribe localmente (inemavox, Whisper large-v3; en inglés para Fabrizio Romano).</p></div>
+    <div class="card"><div class="num">1</div><h3>Recolección y transcripción</h3><p>Lista los videos de los canales de <code>canais.json</code> (solo metadatos, yt-dlp), elige primero el más visto de cada canal (hasta 3 por canal, sin repetir un video ya usado y saltando videos/lives de más de 75 min), toma los subtítulos de YouTube y, si no los hay, descarga el audio y lo transcribe localmente (inemavox, Whisper large-v3; en inglés para Fabrizio Romano).</p></div>
     <div class="card"><div class="num">2</div><h3>Guion</h3><p><code>claude -p</code> lee las transcripciones y guarda <code>base.md</code> (cada hecho, quién lo dijo, el video y el fragmento literal), <code>roteiro.json</code> (textos hablados y visuales) y <code>legenda.txt</code>.</p></div>
     <div class="card"><div class="num">3</div><h3>Verificación</h3><p><code>auto/checar.py</code> verifica los fragmentos en la transcripción, los números escritos con letras en el habla, al menos 5 temas, el aviso "Rumor só vale quando o clube confirma." (el rumor solo vale cuando el club lo confirma), el CTA de inema.club y reprueba cualquier frase sobre apuestas. Si reprueba: vuelve una vez para corrección.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen genera el avatar de Nei por el estudio (suscripción). Si falla, sale la versión con la foto y la voz de Nei, que solo va al bot.</p></div>
     <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> se renderiza cuadro por cuadro con Playwright, con contadores, sellos y la fuente en pantalla. La imagen es la miniatura del video del canal: jugadas, goles y escudos de clubes no entran.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publicación</h3><p><code>auto/publicar.sh</code> publica en el YouTube Inema Pro (lives12) con <code>yt-pubx</code> y siempre lo manda al bot v3, con el enlace.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publicación</h3><p>En la agenda, el video listo va primero al bot v3 como vista previa; al mediodía <code>auto/publicar-pendente.sh</code> lo publica en el YouTube Inema Pro (lives12) con <code>yt-pubx</code> y manda el enlace al bot.</p></div>
   </div>
 </div></section>
 
 <section id="agenda"><div class="wrap">
   <span class="chip">Rondas</span>
   <h2>Tres tipos de ronda</h2>
-  <p class="sub">Cada ronda es un modo de <code>auto/rodar.sh</code>. Los timers están en <code>systemd/</code>, pero la agenda todavía no está activada: el horario se va a acordar para no competir por la GPU y por HeyGen con los proyectos hermanos.</p>
+  <p class="sub">Cada ronda es un modo de <code>auto/rodar.sh</code>. La agenda (timers en <code>systemd/</code>) está activada: la generación corre a las 09:00 y la publicación a las 12:00, fuera de los horarios de los proyectos hermanos que usan la misma GPU y el mismo HeyGen.</p>
   <div class="phase"><div class="tag">Diario</div><div class="d"><strong>Ronda <code>diario</code></strong><span>El resumen de los diez, de 2 a 3 minutos: los videos de ayer y anteayer aún no usados, con al menos cinco temas (uno por canal siempre que se pueda). Si menos de cinco canales publicaron en esos dos días, la ventana se amplía a cinco días.</span></div></div>
   <div class="phase"><div class="tag">Sábado</div><div class="d"><strong>Ronda <code>semanal</code></strong><span>Balance de la semana (los 7 días hasta ayer), de 2 a 3 minutos. Después, el video largo 16:9 "A semana explicada" (La semana explicada), de 5,5 a 7 minutos.</span></div></div>
   <div class="phase"><div class="tag">Domingo</div><div class="d"><strong>Ronda <code>domingo</code></strong><span>Lo que los canales esperan para la próxima semana (clásicos, definiciones, técnico en la cuerda floja, negociaciones), de 2 a 3 minutos. Después, el video largo 16:9 explicado (de 5,5 a 7 minutos).</span></div></div>
@@ -254,15 +254,16 @@
     <pre><span class="k">echo</span> <span class="s">"2026-11-01 semanal"</span> &gt;&gt; auto/pular.txt   <span class="c"># saltar una ronda</span></pre>
   </div></div>
   <div class="step"><div class="b">6</div><div>
-    <h3>Activar la agenda (cuando se acuerde el horario)</h3>
-    <p>Ajusta el <code>OnCalendar</code> de los timers en <code>systemd/</code>, copia las unidades al systemd de usuario y activa los tres.</p>
+    <h3>Activar la agenda y retener una publicación</h3>
+    <p>Generación a las 09:00 (diario de lunes a viernes, semanal el sábado, domingo el domingo) y publicación a las 12:00. Copia las unidades al systemd de usuario y activa los cuatro timers. Para retener la publicación de un video que ya fue al bot como vista previa, crea el archivo <code>SEGURAR</code> en la carpeta de la edición.</p>
     <pre><span class="k">cp</span> systemd/futviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
-<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer
-<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span></pre>
+<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer futviral-publicar.timer
+<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span>
+<span class="k">touch</span> edicoes/2026-10-27-diario/SEGURAR   <span class="c"># no publica esa edición a las 12:00</span></pre>
   </div></div>
   <div class="step"><div class="b">7</div><div>
     <h3>Seguir en Telegram y en YouTube</h3>
-    <p>Cada ronda publica en Inema Pro (lives12) y manda el video al bot v3 con el enlace. Si no hay tema o algo falla, el bot recibe el aviso.</p>
+    <p>En la agenda, el bot v3 recibe la vista previa a las 09:00 y el enlace de Inema Pro (lives12) después del mediodía. Una ronda a mano (paso 4) publica en el momento. Si no hay tema o algo falla, el bot recibe el aviso.</p>
   </div></div>
 </div></section>
 

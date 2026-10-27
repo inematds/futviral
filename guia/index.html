@@ -170,19 +170,19 @@
     <span>YouTube + bot</span>
   </div>
   <div class="grid g3" style="margin-top:26px">
-    <div class="card"><div class="num">1</div><h3>Coleta e transcrição</h3><p>Lista os vídeos dos canais de <code>canais.json</code> (só metadados, yt-dlp), escolhe primeiro o mais visto de cada canal (até 3 por canal, sem repetir vídeo já usado e pulando vídeo/live com mais de 75 min), baixa o áudio e transcreve localmente (inemavox, Whisper large-v3; em inglês para o Fabrizio Romano).</p></div>
+    <div class="card"><div class="num">1</div><h3>Coleta e transcrição</h3><p>Lista os vídeos dos canais de <code>canais.json</code> (só metadados, yt-dlp), escolhe primeiro o mais visto de cada canal (até 3 por canal, sem repetir vídeo já usado e pulando vídeo/live com mais de 75 min), pega a legenda do YouTube e, se não houver, baixa o áudio e transcreve localmente (inemavox, Whisper large-v3; em inglês para o Fabrizio Romano).</p></div>
     <div class="card"><div class="num">2</div><h3>Roteiro</h3><p>O <code>claude -p</code> lê as transcrições e grava <code>base.md</code> (cada fato, quem disse, o vídeo e o trecho literal), <code>roteiro.json</code> (falas e visuais) e <code>legenda.txt</code>.</p></div>
     <div class="card"><div class="num">3</div><h3>Conferência</h3><p>O <code>auto/checar.py</code> confere os trechos na transcrição, os números por extenso na fala, pelo menos 5 assuntos, o aviso "Rumor só vale quando o clube confirma.", o CTA do inema.club e reprova qualquer fala de aposta. Reprovou: volta uma vez para correção.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>O HeyGen gera o avatar do Nei pelo estúdio (assinatura). Se falhar, sai a versão com a foto e a voz do Nei, que só vai ao bot.</p></div>
     <div class="card"><div class="num">5</div><h3>Vídeo</h3><p>O <code>motor/palco.html</code> é renderizado quadro a quadro pelo Playwright, com contadores, carimbos e a fonte na tela. A imagem é a miniatura do vídeo do canal: lance, gol e escudo de clube não entram.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>O <code>auto/publicar.sh</code> publica no YouTube Inema Pro (lives12) pelo <code>yt-pubx</code> e manda sempre ao bot v3, com o link.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>Na agenda, o vídeo pronto vai primeiro ao bot v3 como prévia; ao meio-dia o <code>auto/publicar-pendente.sh</code> publica no YouTube Inema Pro (lives12) pelo <code>yt-pubx</code> e manda o link ao bot.</p></div>
   </div>
 </div></section>
 
 <section id="agenda"><div class="wrap">
   <span class="chip">Rodadas</span>
   <h2>Três tipos de rodada</h2>
-  <p class="sub">Cada rodada é um modo do <code>auto/rodar.sh</code>. Os timers estão em <code>systemd/</code>, mas a agenda ainda não está ligada: o horário vai ser combinado para não disputar a GPU e o HeyGen com os projetos irmãos.</p>
+  <p class="sub">Cada rodada é um modo do <code>auto/rodar.sh</code>. A agenda (timers em <code>systemd/</code>) está ligada: a geração roda às 09:00 e a publicação às 12:00, fora dos horários dos projetos irmãos que usam a mesma GPU e o mesmo HeyGen.</p>
   <div class="phase"><div class="tag">Diário</div><div class="d"><strong>Rodada <code>diario</code></strong><span>O resumo dos dez, 2 a 3 minutos: os vídeos de ontem e anteontem ainda não usados, com pelo menos cinco assuntos (um por canal sempre que der). Se menos de cinco canais publicaram nesses dois dias, a janela se amplia para cinco dias.</span></div></div>
   <div class="phase"><div class="tag">Sábado</div><div class="d"><strong>Rodada <code>semanal</code></strong><span>Balanço da semana (os 7 dias até ontem), 2 a 3 minutos. Depois, o longo 16:9 "A semana explicada" (5,5 a 7 minutos).</span></div></div>
   <div class="phase"><div class="tag">Domingo</div><div class="d"><strong>Rodada <code>domingo</code></strong><span>O que os canais esperam para a próxima semana (clássicos, decisões, técnico ameaçado, negociações), 2 a 3 minutos. Depois, o longo 16:9 explicado (5,5 a 7 minutos).</span></div></div>
@@ -254,15 +254,16 @@
     <pre><span class="k">echo</span> <span class="s">"2026-11-01 semanal"</span> &gt;&gt; auto/pular.txt   <span class="c"># pular uma rodada</span></pre>
   </div></div>
   <div class="step"><div class="b">6</div><div>
-    <h3>Ligar a agenda (quando o horário for combinado)</h3>
-    <p>Ajuste o <code>OnCalendar</code> dos timers em <code>systemd/</code>, copie as unidades do systemd de usuário e ative os três.</p>
+    <h3>Ligar a agenda e segurar uma publicação</h3>
+    <p>Geração às 09:00 (diário de segunda a sexta, semanal no sábado, domingo no domingo) e publicação às 12:00. Copie as unidades do systemd de usuário e ative os quatro timers. Para segurar a publicação de um vídeo que já foi ao bot como prévia, crie o arquivo <code>SEGURAR</code> na pasta da edição.</p>
     <pre><span class="k">cp</span> systemd/futviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
-<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer
-<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span></pre>
+<span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer futviral-publicar.timer
+<span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span>
+<span class="k">touch</span> edicoes/2026-10-27-diario/SEGURAR   <span class="c"># não publica essa edição às 12:00</span></pre>
   </div></div>
   <div class="step"><div class="b">7</div><div>
     <h3>Acompanhar no Telegram e no YouTube</h3>
-    <p>Cada rodada publica no Inema Pro (lives12) e manda o vídeo ao bot v3 com o link. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
+    <p>Na agenda, o bot v3 recebe a prévia às 09:00 e o link do Inema Pro (lives12) depois do meio-dia. Rodada à mão (passo 4) publica na hora. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
   </div></div>
 </div></section>
 

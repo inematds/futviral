@@ -24,12 +24,12 @@ Eurão · Jovem Pan Esportes · Jozão · Fabrizio Romano · Chico Garcia · Tod
 |---|---|---|---|
 | 1 | Lista los videos de los canales del período (solo metadatos) | `coleta/listar.py` (llamado por `auto/rodar.sh`) | ⚙️ script |
 | 2 | Elige 1 video por canal (el más visto), sin repetir un video ya usado | `auto/rodar.sh` + `auto/usados.py` | ⚙️ script |
-| 3 | Descarga el audio y transcribe en local (inemavox, Whisper large-v3; inglés para Fabrizio) | `coleta/transcrever.sh` | ⚙️ script |
+| 3 | Toma los subtítulos de YouTube (segundos); si no los hay, descarga el audio y transcribe en local (inemavox, Whisper large-v3; inglés para Fabrizio) | `coleta/transcrever.sh` + `coleta/legenda_yt.py` | ⚙️ script |
 | 4 | Escribe `base.md` (hecho + fragmento literal), `roteiro.json` y `legenda.txt` | `claude -p` con `auto/roteiro.md` | 🤖 `claude -p` |
 | 5 | Verifica fragmentos, números escritos con letras, 5+ temas, aviso de rumor, sin apuestas; 1 corrección | `auto/checar.py` | ⚙️ script |
 | 6 | Avatar de Nei en el estudio de HeyGen (suscripción); si falla, foto + voz de Nei | `motor/avatar_heygen.sh` / `motor/narrar.py` | ⚙️ script |
 | 7 | Renderiza el video (palco.html cuadro por cuadro) y compone el avatar | `motor/gerar_cena.py` + `motor/compor_avatar.sh` | ⚙️ script |
-| 8 | Publica en YouTube **Inema Pro (lives12)** y lo manda al bot v3 con el enlace | `auto/publicar.sh` (yt-pubx) | ⚙️ script |
+| 8 | Generación a las 9 h: el video va al bot como vista previa. Al mediodía se publica en YouTube **Inema Pro (lives12)** y se manda el enlace al bot (`touch <edición>/SEGURAR` lo retiene) | `auto/publicar.sh` + `auto/publicar-pendente.sh` (yt-pubx) | ⚙️ timer 09:00 / 12:00 |
 | 9 | Sáb/dom: video largo 16:9 "A semana explicada" (La semana explicada) | `auto/roteiro-longo.md` → `auto/longo.sh` | 🤖 + ⚙️ |
 | 10 | Aprobar el formato, agregar/quitar canales, activar la agenda | `canais.json`, `systemd/` | 🧠 sesión con Nei |
 
@@ -41,7 +41,7 @@ SEM_AVATAR=1 auto/rodar.sh diario 2026-10-26    # versión con foto, solo para e
 REUSAR_ROTEIRO=1 auto/rodar.sh diario 2026-10-26  # rehace avatar/video/publicación con el guion ya aprobado
 ```
 
-La agenda (`systemd/futviral-*.timer`) todavía no está activada: el horario se va a acordar para no competir por la GPU y por HeyGen con los proyectos hermanos.
+Agenda (`systemd/futviral-*.timer`, activada el 26/10/2026): generación a las 09:00 (diario de lunes a viernes, semanal el sábado, domingo el domingo) y publicación a las 12:00.
 
 ## Reglas de cada video
 
