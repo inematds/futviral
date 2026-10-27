@@ -141,7 +141,7 @@
 
 <section id="resumo" class="resumo"><div class="wrap">
   <span class="chip">En resumen</span>
-  <p>futviral es un sistema que hace, solo, videos verticales (9:16) de 2 a 3 minutos con el resumen de lo que dijeron los 10 mayores canales de fútbol de YouTube: Brasileirão, fútbol europeo, mercado de fichajes, polémicas y negocios del fútbol. "Mira" los videos a través de la transcripción, separa los hechos y los números con la fuente de cada uno y arma un video con números grandes, sellos (RUMOR, NEGOCIANDO, FECHADO (cerrado), POLÊMICA (polémica)) y Nei comentando (avatar). El rumor se trata como rumor, ningún club tiene preferencia y las apuestas no entran. Sirve para quien quiere saber, en pocos minutos, de qué están hablando los principales canales. Funciona en una computadora con GPU, con la suscripción de Claude Code y de HeyGen.</p>
+  <p>futviral es un sistema que hace, solo, videos verticales (9:16) de 2 a 3 minutos con el resumen de lo que dijeron los 10 mayores canales de fútbol de YouTube: Brasileirão, fútbol europeo, mercado de fichajes, polémicas y negocios del fútbol. "Mira" los videos a través de la transcripción, separa los hechos y los números con la fuente de cada uno y arma un video con números grandes, sellos (RUMOR, NEGOCIANDO, FECHADO (cerrado), POLÊMICA (polémica)) y Nei (Nei Maldaner, creador de INEMA) comentando en avatar. El rumor se trata como rumor, ningún club tiene preferencia y las apuestas no entran. Sirve para quien quiere saber, en pocos minutos, de qué están hablando los principales canales. Funciona en una computadora con GPU, con la suscripción de Claude Code y de HeyGen.</p>
 </div></section>
 
 <section id="oque"><div class="wrap">
@@ -215,22 +215,32 @@
 
 <section id="guia"><div class="wrap">
   <span class="chip">Guía de uso · paso a paso</span>
-  <h2>Elegir los canales, probar y ejecutar</h2>
+  <h2>Instalar, elegir los canales, probar y ejecutar</h2>
   <p class="sub">Comandos reales del repositorio, ejecutados en la raíz del proyecto.</p>
   <div class="step"><div class="b">1</div><div>
+    <h3>Descargar el proyecto y sus hermanos</h3>
+    <p>futviral está en <code>~/projetos/futviral</code> y usa proyectos públicos de INEMA instalados a su lado. También necesita <code>yt-dlp</code>, <code>ffmpeg</code>, <code>node</code> y <code>claude</code> con sesión iniciada en la suscripción.</p>
+    <pre><span class="k">cd</span> ~/projetos
+<span class="k">git clone</span> <span class="s">https://github.com/inematds/futviral</span>
+<span class="k">for</span> r <span class="k">in</span> inemavox yt-pubx cardshorts explicavideos refazvideo eventosextremospub; <span class="k">do</span>
+  <span class="k">git clone</span> <span class="s">https://github.com/inematds/$r</span>
+<span class="k">done</span></pre>
+    <p>Cada hermano tiene su propio README con la configuración: las credenciales del canal en <a href="https://github.com/inematds/yt-pubx" target="_blank" rel="noopener">yt-pubx</a>, el bot de Telegram en <a href="https://github.com/inematds/refazvideo" target="_blank" rel="noopener">refazvideo</a>, el perfil del estudio de HeyGen y la pantalla virtual en <a href="https://github.com/inematds/explicavideos" target="_blank" rel="noopener">explicavideos</a>, la transcripción en <a href="https://github.com/inematds/inemavox" target="_blank" rel="noopener">inemavox</a> y la voz en <a href="https://github.com/inematds/cardshorts" target="_blank" rel="noopener">cardshorts</a>. La prueba del paso 3 ya necesita inemavox, cardshorts y refazvideo; la publicación necesita todos.</p>
+  </div></div>
+  <div class="step"><div class="b">2</div><div>
     <h3>Elegir los canales</h3>
-    <p>La lista está en <code>canais.json</code>. Para pausar un canal sin borrarlo, usa <code>"ativo": false</code>. El <code>handle</code> es la ruta del canal en YouTube y <code>lang</code> es el idioma del canal para Whisper (por defecto pt).</p>
+    <p>La lista está en <code>canais.json</code>. Para pausar un canal sin borrarlo, usa <code>"ativo": false</code>. El <code>handle</code> es la ruta del canal en YouTube, <code>rk</code> es la etiqueta que aparece en pantalla y <code>lang</code> es el idioma del canal para Whisper (por defecto pt).</p>
     <pre>{<span class="s">"handle"</span>: <span class="s">"channel/UCX1em-uaFMS02Rrk_Bowyng"</span>, <span class="s">"nome"</span>: <span class="s">"Fabrizio Romano"</span>, <span class="s">"rk"</span>: <span class="s">"MERCADO MUNDIAL"</span>, <span class="s">"lang"</span>: <span class="s">"en"</span>, <span class="s">"ativo"</span>: true}</pre>
     <p>Si otro canal de fútbol consolidado aparece destacado, el sistema sugiere incluirlo en el mensaje del bot (nunca un canal emergente ni de apuestas). Solo entra con el visto bueno de Nei.</p>
   </div></div>
-  <div class="step"><div class="b">2</div><div>
+  <div class="step"><div class="b">3</div><div>
     <h3>Probar sin avatar y sin publicar</h3>
     <p>Ejecuta una ronda sin HeyGen, sin el video largo y sin enviar al bot ni a YouTube. Igual usa <code>claude -p</code> (cuota de la suscripción), descarga el audio y ocupa la GPU con Whisper. La terminal queda en silencio: la salida va al log de la edición.</p>
     <pre><span class="k">SEM_AVATAR=1 SEM_BOT=1 SEM_LONGO=1 auto/rodar.sh</span> diario   <span class="c"># prueba: sin HeyGen, sin video largo y sin enviar</span>
 <span class="k">tail -f</span> edicoes/$(date +%F)-diario/rodada.log              <span class="c"># seguir el progreso</span></pre>
     <p>En la carpeta <code>edicoes/AAAA-MM-DD-diario/</code> quedan <code>base.md</code>, <code>roteiro.json</code>, <code>legenda.txt</code>, <code>checar.log</code> y el video listo (<code>video.mp4</code>).</p>
   </div></div>
-  <div class="step"><div class="b">3</div><div>
+  <div class="step"><div class="b">4</div><div>
     <h3>Ejecutar a mano</h3>
     <p>Pasa el modo y la fecha. La ronda completa genera el avatar, publica en lives12 y lo manda al bot.</p>
     <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># ronda completa (avatar + lives12 + bot)</span>
@@ -238,19 +248,19 @@
 <span class="k">REUSAR_ROTEIRO=1 auto/rodar.sh</span> diario 2026-10-26  <span class="c"># rehace avatar/video/publicación con el guion ya aprobado</span>
 <span class="k">VALIDAR=1 auto/rodar.sh</span> diario 2026-10-26        <span class="c"># edición de prueba (carpeta -validacao), nunca va a YouTube</span></pre>
   </div></div>
-  <div class="step"><div class="b">4</div><div>
+  <div class="step"><div class="b">5</div><div>
     <h3>Saltar una ronda</h3>
     <p>Agrega la fecha y el modo en <code>auto/pular.txt</code>.</p>
     <pre><span class="k">echo</span> <span class="s">"2026-11-01 semanal"</span> &gt;&gt; auto/pular.txt   <span class="c"># saltar una ronda</span></pre>
   </div></div>
-  <div class="step"><div class="b">5</div><div>
+  <div class="step"><div class="b">6</div><div>
     <h3>Activar la agenda (cuando se acuerde el horario)</h3>
     <p>Ajusta el <code>OnCalendar</code> de los timers en <code>systemd/</code>, copia las unidades al systemd de usuario y activa los tres.</p>
     <pre><span class="k">cp</span> systemd/futviral-* ~/.config/systemd/user/ &amp;&amp; <span class="k">systemctl</span> --user daemon-reload
 <span class="k">systemctl</span> --user enable --now futviral-diario.timer futviral-semanal.timer futviral-domingo.timer
 <span class="k">systemctl</span> --user list-timers <span class="s">'futviral-*'</span></pre>
   </div></div>
-  <div class="step"><div class="b">6</div><div>
+  <div class="step"><div class="b">7</div><div>
     <h3>Seguir en Telegram y en YouTube</h3>
     <p>Cada ronda publica en Inema Pro (lives12) y manda el video al bot v3 con el enlace. Si no hay tema o algo falla, el bot recibe el aviso.</p>
   </div></div>
