@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publica no lives12 os vídeos que a geração das 9h deixou pendentes (<ed>/PUBLICAR_PENDENTE.<video>).
+# Publica no lives24 os vídeos que a geração das 9h deixou pendentes (<ed>/PUBLICAR_PENDENTE.<video>).
 # Timer das 12:00 (Nei, 26/10/2026). <ed>/SEGURAR impede a publicação daquela edição (avisa no bot).
 # uso: auto/publicar-pendente.sh            (todas as pendentes dos últimos 2 dias)
 set -uo pipefail

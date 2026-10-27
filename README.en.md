@@ -29,14 +29,14 @@ Eurão · Jovem Pan Esportes · Jozão · Fabrizio Romano · Chico Garcia · Tod
 | 5 | Checks excerpts, numbers spelled out, 5+ topics, rumor notice, no betting; 1 correction | `auto/checar.py` | ⚙️ script |
 | 6 | Nei's avatar in the HeyGen studio (subscription); if it fails, Nei's photo + voice | `motor/avatar_heygen.sh` / `motor/narrar.py` | ⚙️ script |
 | 7 | Renders the video (palco.html frame by frame) and composites the avatar | `motor/gerar_cena.py` + `motor/compor_avatar.sh` | ⚙️ script |
-| 8 | Generation at 9 am: the video goes to the bot as a preview. At noon it publishes to YouTube **Inema Pro (lives12)** and sends the link to the bot (`touch <edition>/SEGURAR` holds it) | `auto/publicar.sh` + `auto/publicar-pendente.sh` (yt-pubx) | ⚙️ timer 09:00 / 12:00 |
+| 8 | Generation at 9 am: the video goes to the bot as a preview. At noon it publishes to YouTube **Inema Club24 (lives24)** and sends the link to the bot (`touch <edition>/SEGURAR` holds it) | `auto/publicar.sh` + `auto/publicar-pendente.sh` (yt-pubx) | ⚙️ timer 09:00 / 12:00 |
 | 9 | Sat/Sun: long 16:9 "A semana explicada" (The week explained) | `auto/roteiro-longo.md` → `auto/longo.sh` | 🤖 + ⚙️ |
 | 10 | Approve the format, add/remove channels, turn on the schedule | `canais.json`, `systemd/` | 🧠 session with Nei |
 
 Run by hand:
 
 ```bash
-auto/rodar.sh diario 2026-10-26                 # full run (avatar + lives12 + bot)
+auto/rodar.sh diario 2026-10-26                 # full run (avatar + lives24 + bot)
 SEM_AVATAR=1 auto/rodar.sh diario 2026-10-26    # photo version, bot only
 REUSAR_ROTEIRO=1 auto/rodar.sh diario 2026-10-26  # redo avatar/video/publishing with the script already approved
 ```

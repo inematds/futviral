@@ -2,8 +2,8 @@
 
 Conta/autor: `inematds <inematds@gmail.com>`, repo `inematds/futviral`. Fluxo e agenda: README.md. Base de cada edição: `edicoes/<ed>/base.md`. Projetos irmãos (mesmo motor): `~/projetos/advviral` (de onde foi clonado), `~/projetos/saudeviral` e `~/projetos/finviral`.
 
-- Criado em 26/10/2026 a pedido do Nei: radar de futebol "usando o finviral", com os 10 maiores canais de futebol do YouTube medidos por yt-dlp (`pesquisa/canais.md`). "Fecha com esses 10, pode clonar o futviral e publique no lives12."
-- Canal: **Inema Pro (lives12)**, por `auto/publicar.sh` (yt-pubx), e SEMPRE ao bot v3 com o link. A versão com foto (avatar falhou ou teste `SEM_AVATAR=1`) só vai ao bot.
+- Criado em 26/10/2026 a pedido do Nei: radar de futebol "usando o finviral", com os 10 maiores canais de futebol do YouTube medidos por yt-dlp (`pesquisa/canais.md`). "Fecha com esses 10, pode clonar o futviral e publique no lives24."
+- Canal: **Inema Club24 (lives24)** — "ficará na lives24 sempre o futebol" (Nei, 26/10/2026; antes lives12), por `auto/publicar.sh` (yt-pubx), e SEMPRE ao bot v3 com o link. A versão com foto (avatar falhou ou teste `SEM_AVATAR=1`) só vai ao bot.
 - Influenciadores em `canais.json` (só YouTube; `lang: en` para o Fabrizio Romano, o Whisper transcreve em inglês). O Nei inclui/exclui. Eu posso SUGERIR canal consolidado de futebol (nunca emergente, nunca de aposta); só entra com ok dele.
 - Regras de futebol (no roteiro e no `checar.py`): todo fato tem trecho literal no base.md; tudo atribuído; rumor é rumor até o clube confirmar; sem torcer por clube; sem aposta (o portão reprova bet/odd/palpite); sem lance, gol ou escudo (direito de transmissão); "Rumor só vale quando o clube confirma." obrigatório.
 - Agenda (Nei, 26/10/2026): GERAÇÃO às 09:00 (diário seg–sex, semanal sáb, domingo dom; `PUBLICAR_AS=12:00` no serviço) → o vídeo vai ao bot como PRÉVIA e fica `<ed>/PUBLICAR_PENDENTE.*`; PUBLICAÇÃO às 12:00 (`futviral-publicar.timer` → `auto/publicar-pendente.sh`). `touch <ed>/SEGURAR` impede a publicação.

@@ -175,7 +175,7 @@
     <div class="card"><div class="num">3</div><h3>Conferência</h3><p>O <code>auto/checar.py</code> confere os trechos na transcrição, os números por extenso na fala, pelo menos 5 assuntos, o aviso "Rumor só vale quando o clube confirma.", o CTA do inema.club e reprova qualquer fala de aposta. Reprovou: volta uma vez para correção.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>O HeyGen gera o avatar do Nei pelo estúdio (assinatura). Se falhar, sai a versão com a foto e a voz do Nei, que só vai ao bot.</p></div>
     <div class="card"><div class="num">5</div><h3>Vídeo</h3><p>O <code>motor/palco.html</code> é renderizado quadro a quadro pelo Playwright, com contadores, carimbos e a fonte na tela. A imagem é a miniatura do vídeo do canal: lance, gol e escudo de clube não entram.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>Na agenda, o vídeo pronto vai primeiro ao bot v3 como prévia; ao meio-dia o <code>auto/publicar-pendente.sh</code> publica no YouTube Inema Pro (lives12) pelo <code>yt-pubx</code> e manda o link ao bot.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publicação</h3><p>Na agenda, o vídeo pronto vai primeiro ao bot v3 como prévia; ao meio-dia o <code>auto/publicar-pendente.sh</code> publica no YouTube Inema Club24 (lives24) pelo <code>yt-pubx</code> e manda o link ao bot.</p></div>
   </div>
 </div></section>
 
@@ -208,7 +208,7 @@
     <div class="card"><h3>Render</h3><p>Node com Playwright e ffmpeg. <code>motor/node_modules</code> é um link para <code>~/projetos/eventosextremospub/motor/node_modules</code>; sem esse projeto, rode <code>npm install playwright</code> em <code>motor/</code>.</p></div>
     <div class="card"><h3>Roteiro</h3><p><code>claude</code> (Claude Code logado na assinatura, chamado como <code>claude -p</code>). O longo de fim de semana usa o motor <code>~/projetos/explicavideos/engine/v2</code>.</p></div>
     <div class="card"><h3>Avatar e voz</h3><p>O estúdio do HeyGen aberto num navegador em tela virtual (Xvfb <code>:99</code>), com o perfil já logado do projeto explicavideos. Sem ele, a rodada sai com a foto e a voz clonada do Nei (Chatterbox, voz <code>nei</code>, pelo projeto <code>~/projetos/cardshorts</code>).</p></div>
-    <div class="card"><h3>Publicação</h3><p><strong>yt-pubx</strong> (<code>~/projetos/yt-pubx</code>), a ferramenta que publica no YouTube; <strong>lives12</strong> é o nome dele para o canal Inema Pro.</p></div>
+    <div class="card"><h3>Publicação</h3><p><strong>yt-pubx</strong> (<code>~/projetos/yt-pubx</code>), a ferramenta que publica no YouTube; <strong>lives24</strong> é o nome dele para o canal Inema Club24.</p></div>
     <div class="card"><h3>Aviso no Telegram</h3><p>O <strong>bot v3</strong> é o bot de Telegram do Nei que recebe cada vídeo e aviso, pelo script <code>~/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs</code>.</p></div>
   </div>
 </div></section>
@@ -242,8 +242,8 @@
   </div></div>
   <div class="step"><div class="b">4</div><div>
     <h3>Rodar à mão</h3>
-    <p>Passe o modo e a data. A rodada completa gera o avatar, publica no lives12 e manda ao bot.</p>
-    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># rodada completa (avatar + lives12 + bot)</span>
+    <p>Passe o modo e a data. A rodada completa gera o avatar, publica no lives24 e manda ao bot.</p>
+    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># rodada completa (avatar + lives24 + bot)</span>
 <span class="k">SEM_AVATAR=1 auto/rodar.sh</span> diario 2026-10-26      <span class="c"># versão com foto, só para o bot</span>
 <span class="k">REUSAR_ROTEIRO=1 auto/rodar.sh</span> diario 2026-10-26  <span class="c"># refaz avatar/vídeo/publicação com o roteiro já aprovado</span>
 <span class="k">VALIDAR=1 auto/rodar.sh</span> diario 2026-10-26        <span class="c"># edição de teste (pasta -validacao), nunca vai ao YouTube</span></pre>
@@ -263,7 +263,7 @@
   </div></div>
   <div class="step"><div class="b">7</div><div>
     <h3>Acompanhar no Telegram e no YouTube</h3>
-    <p>Na agenda, o bot v3 recebe a prévia às 09:00 e o link do Inema Pro (lives12) depois do meio-dia. Rodada à mão (passo 4) publica na hora. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
+    <p>Na agenda, o bot v3 recebe a prévia às 09:00 e o link do Inema Club24 (lives24) depois do meio-dia. Rodada à mão (passo 4) publica na hora. Se não houver pauta ou algo falhar, o bot recebe o aviso.</p>
   </div></div>
 </div></section>
 

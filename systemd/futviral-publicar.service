@@ -1,5 +1,5 @@
 [Unit]
-Description=futviral — publica no lives12 o que a geração das 9h deixou pronto
+Description=futviral — publica no lives24 o que a geração das 9h deixou pronto
 After=network-online.target
 
 [Service]

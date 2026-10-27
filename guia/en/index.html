@@ -175,7 +175,7 @@
     <div class="card"><div class="num">3</div><h3>Check</h3><p><code>auto/checar.py</code> checks the excerpts against the transcript, numbers spelled out in words in the speech, at least 5 topics, the notice "Rumor só vale quando o clube confirma." (A rumor only counts when the club confirms it.), the inema.club CTA, and rejects any line about betting. If it fails: it goes back once for correction.</p></div>
     <div class="card"><div class="num">4</div><h3>Avatar</h3><p>HeyGen generates Nei's avatar through the studio (subscription). If it fails, a version with Nei's photo and voice comes out, which only goes to the bot.</p></div>
     <div class="card"><div class="num">5</div><h3>Video</h3><p><code>motor/palco.html</code> is rendered frame by frame by Playwright, with counters, stamps and the source on screen. The image is the thumbnail of the channel's video: plays, goals and club crests are left out.</p></div>
-    <div class="card"><div class="num">6</div><h3>Publishing</h3><p>On the schedule, the finished video first goes to bot v3 as a preview; at noon <code>auto/publicar-pendente.sh</code> publishes it to YouTube Inema Pro (lives12) through <code>yt-pubx</code> and sends the link to the bot.</p></div>
+    <div class="card"><div class="num">6</div><h3>Publishing</h3><p>On the schedule, the finished video first goes to bot v3 as a preview; at noon <code>auto/publicar-pendente.sh</code> publishes it to YouTube Inema Club24 (lives24) through <code>yt-pubx</code> and sends the link to the bot.</p></div>
   </div>
 </div></section>
 
@@ -208,7 +208,7 @@
     <div class="card"><h3>Render</h3><p>Node with Playwright and ffmpeg. <code>motor/node_modules</code> is a link to <code>~/projetos/eventosextremospub/motor/node_modules</code>; without that project, run <code>npm install playwright</code> in <code>motor/</code>.</p></div>
     <div class="card"><h3>Script</h3><p><code>claude</code> (Claude Code logged in with the subscription, called as <code>claude -p</code>). The weekend long video uses the <code>~/projetos/explicavideos/engine/v2</code> engine.</p></div>
     <div class="card"><h3>Avatar and voice</h3><p>The HeyGen studio open in a browser on a virtual screen (Xvfb <code>:99</code>), with the explicavideos project's already logged-in profile. Without it, the run comes out with Nei's photo and cloned voice (Chatterbox, voice <code>nei</code>, through the <code>~/projetos/cardshorts</code> project).</p></div>
-    <div class="card"><h3>Publishing</h3><p><strong>yt-pubx</strong> (<code>~/projetos/yt-pubx</code>), the tool that publishes to YouTube; <strong>lives12</strong> is its name for the Inema Pro channel.</p></div>
+    <div class="card"><h3>Publishing</h3><p><strong>yt-pubx</strong> (<code>~/projetos/yt-pubx</code>), the tool that publishes to YouTube; <strong>lives24</strong> is its name for the Inema Club24 channel.</p></div>
     <div class="card"><h3>Telegram notice</h3><p><strong>bot v3</strong> is Nei's Telegram bot that receives every video and notice, through the script <code>~/projetos/refazvideo/ferramentas/enviar_bot_v3.mjs</code>.</p></div>
   </div>
 </div></section>
@@ -242,8 +242,8 @@
   </div></div>
   <div class="step"><div class="b">4</div><div>
     <h3>Run by hand</h3>
-    <p>Pass the mode and the date. The full run generates the avatar, publishes to lives12 and sends to the bot.</p>
-    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># full run (avatar + lives12 + bot)</span>
+    <p>Pass the mode and the date. The full run generates the avatar, publishes to lives24 and sends to the bot.</p>
+    <pre><span class="k">auto/rodar.sh</span> diario 2026-10-26                   <span class="c"># full run (avatar + lives24 + bot)</span>
 <span class="k">SEM_AVATAR=1 auto/rodar.sh</span> diario 2026-10-26      <span class="c"># photo version, bot only</span>
 <span class="k">REUSAR_ROTEIRO=1 auto/rodar.sh</span> diario 2026-10-26  <span class="c"># redo avatar/video/publishing with the script already approved</span>
 <span class="k">VALIDAR=1 auto/rodar.sh</span> diario 2026-10-26        <span class="c"># test edition (-validacao folder), never goes to YouTube</span></pre>
@@ -263,7 +263,7 @@
   </div></div>
   <div class="step"><div class="b">7</div><div>
     <h3>Follow along on Telegram and YouTube</h3>
-    <p>On the schedule, bot v3 gets the preview at 09:00 and the Inema Pro (lives12) link after noon. A run by hand (step 4) publishes right away. If there's nothing to report or something fails, the bot gets the notice.</p>
+    <p>On the schedule, bot v3 gets the preview at 09:00 and the Inema Club24 (lives24) link after noon. A run by hand (step 4) publishes right away. If there's nothing to report or something fails, the bot gets the notice.</p>
   </div></div>
 </div></section>
 

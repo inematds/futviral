@@ -1,6 +1,6 @@
 # Tarefa: roteiro do futviral LONGO 16:9 ({MODO}, {DATA})
 
-Você monta o roteiro de um vídeo **16:9 de 5 a 7 minutos** do **futviral**, para o canal Inema Pro no YouTube:
+Você monta o roteiro de um vídeo **16:9 de 5 a 7 minutos** do **futviral**, para o canal Inema Club24 no YouTube:
 **"A semana explicada"**. O curto 9:16 da mesma rodada dá só o placar; este vídeo EXPLICA cada assunto: o que
 cada influenciador disse, o que isso quer dizer, o contexto e os números com fonte. O Nei (avatar) apresenta.
 Trabalhe só com os arquivos abaixo. Não use a internet nem outra API.
