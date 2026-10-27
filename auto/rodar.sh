@@ -4,9 +4,9 @@
 #   diario  = vídeos de ontem e anteontem ainda não usados (40–60 s)
 #   semanal = balanço da semana (7 dias até ontem), 90 s a 2 min   [sábado]
 # Teste: SEM_AVATAR=1 pula o HeyGen; SEM_BOT=1 só simula o envio (e não publica); SEM_LONGO=1 pula o longo.
-# Publica no YouTube Inema Pro (lives12) e manda sempre ao bot v3 (auto/publicar.sh). Sáb/dom: + LONGO 16:9 (auto/longo.sh).
+# Publica no YouTube Inema Club24 (lives24) e manda sempre ao bot v3 (auto/publicar.sh). Sáb/dom: + LONGO 16:9 (auto/longo.sh).
 #   domingo = a semana que passou + o que eles esperam para a próxima, ~90 s   [domingo]
-# Sempre manda algo ao bot v3: o vídeo (com o link do lives12), "sem pauta" ou "falhou em X".
+# Sempre manda algo ao bot v3: o vídeo (com o link do lives24), "sem pauta" ou "falhou em X".
 set -uo pipefail
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 MODO="${1:?modo: diario|semanal|domingo}"; DIA="${2:-$(date +%F)}"
@@ -66,10 +66,15 @@ open(saida, "w").write("".join("\t".join(c) + "\n" for c in esc))
 print(len(ls), "listados ·", len(esc), "escolhidos")
 EOF
 }
+# REUSAR_ROTEIRO=1 reaproveita a lista de vídeos da edição: escolher de novo trocava os vídeos e o roteiro aprovado deixava de valer (26/10/2026)
+if [ "${REUSAR_ROTEIRO:-}" = 1 ] && [ -s "$ED/videos.tsv" ]; then
+  echo "reusando o videos.tsv da edição"
+else
 escolher
 # resumo dos dez com 5+ assuntos: se ontem+anteontem teve menos de 5 canais, amplia o diário para 5 dias (os já usados continuam fora)
 if [ "$MODO" = diario ] && [ "$(cut -f1 "$ED/videos.tsv" 2>/dev/null | sort -u | wc -l)" -lt 5 ]; then
   DE=$(d -5); echo "menos de 5 canais em 2 dias: janela ampliada para $(date -d "$DE" +%d/%m)"; escolher
+fi
 fi
 [ -s "$ED/videos.tsv" ] || avisar "sem vídeo novo dos canais entre $(date -d "$DE" +%d/%m) e $(date -d "$ATE" +%d/%m)" 0
 
@@ -95,7 +100,7 @@ INSTR="$INSTR Mínimo de assuntos nesta edição: $MIN_ASSUNTOS ($NT vídeos tra
 if [ "$MODO" = diario ]; then
   JA=$(python3 "$RAIZ/auto/usados.py" recentes "$DIA" 7)
   [ -n "$JA" ] && INSTR="$INSTR
-Já publicados no diário nos últimos 7 dias (data · influenciador · assunto). Os vídeos deles já estão fora. O mesmo assunto PODE voltar pela boca de OUTRO influenciador, porque é outro ponto de vista: nesse caso ligue os dois na fala ("o Fulano também falou sobre isso", "no dia tal o Beltrano disse X; agora o Fulano vê diferente") e mostre o que ele traz de novo ou de diferente. O que não pode é recontar a mesma coisa do mesmo jeito.
+Já publicados no diário nos últimos 7 dias (data · influenciador · assunto). Os vídeos deles já estão fora. O mesmo assunto PODE voltar pela boca de OUTRO influenciador, porque é outro ponto de vista: nesse caso ligue os dois na fala («o Fulano também falou sobre isso», «no dia tal o Beltrano disse X; agora o Fulano vê diferente») e mostre o que ele traz de novo ou de diferente. O que não pode é recontar a mesma coisa do mesmo jeito.
 $JA"
 fi
 cp "$RAIZ/motor/assets/cta.jpg" "$RAIZ/motor/assets/avatar-teste.jpg" "$ED/img/"
@@ -146,14 +151,15 @@ else
     && bash "$RAIZ/motor/montar.sh" "$ED" "$ED/video.mp4" || avisar "falhou também a versão com foto (ver $LOG)"
 fi
 
-# 5. publica no YouTube Inema Pro (lives12) e manda SEMPRE ao bot v3 (autorizado pelo Nei em 10/10/2026)
+# 5. publica no YouTube Inema Club24 (lives24) e manda SEMPRE ao bot v3 (autorizado pelo Nei em 10/10/2026)
 #    a versão com foto (avatar falhou) e os testes só vão ao bot
 SUG=""; [ -s "$ED/sugestao.txt" ] && SUG="
 Sugestão de influenciador: $(head -c 300 "$ED/sugestao.txt")"
 SEMYT=""; { [ -n "$NOTA" ] || [ -n "$DRY" ] || [ -n "${VALIDAR:-}" ]; } && SEMYT=1
 SEM_YT="$SEMYT" SEM_BOT="${SEM_BOT:-}" bash "$RAIZ/auto/publicar.sh" "$ED/video.mp4" "$ED" "$MODO · $DATA_BR $NOTA" "$SUG"
 # registra só os vídeos CITADOS no base.md (o escolhido que ficou de fora continua disponível amanhã) + o assunto
-[ -z "$DRY" ] && [ -z "${VALIDAR:-}" ] && python3 "$RAIZ/auto/usados.py" registrar "$ED" "$DIA" "$MODO"
+# só registra o que vai ao ar: teste com foto (SEM_AVATAR) ou avatar que falhou não marca os vídeos como usados (26/10/2026)
+[ -z "$SEMYT" ] && python3 "$RAIZ/auto/usados.py" registrar "$ED" "$DIA" "$MODO"
 
 # 6. sábado e domingo: o LONGO 16:9 explicado (não derruba o curto: falha vira aviso no bot)
 if [ -n "$INSTR_L" ] && [ "${SEM_LONGO:-}" != 1 ]; then
