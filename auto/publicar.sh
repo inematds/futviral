@@ -39,14 +39,16 @@ fi
 if [ -n "$URL" ]; then ST="publicado no Inema Club24 (lives24): $URL"
 elif [ "${SEM_YT:-}" = 1 ]; then ST="(sem YouTube nesta rodada)"
 else ST="⚠ NÃO publicou no lives24: $(grep -h -i 'erro\|error\|quota\|limit' "$PL" | tail -1 | cut -c1-200)"; fi
-VB="$V"  # bot aceita até ~49 MB: acima disso vai uma cópia 720p (o YouTube recebe o original)
-if [ "$(stat -c %s "$V")" -gt 48000000 ]; then
-  VB="${V%.mp4}-720p.mp4"
-  ffmpeg -v error -y -i "$V" -vf "scale=-2:720" -c:v libx264 -crf 27 -preset medium -c:a aac -b:a 128k -movflags +faststart "$VB"
-fi
-rm -f "$VB.envio-v3.json"
-node "$BOT" $DRY "$VB" "futviral · $ROT · ${DUR}s
+if [ -z "$URL" ]; then  # (Nei, 06/11/2026: aviso do YouTube no v3 só se der erro)
+  VB="$V"  # bot aceita até ~49 MB: acima disso vai uma cópia 720p (o YouTube recebe o original)
+  if [ "$(stat -c %s "$V")" -gt 48000000 ]; then
+    VB="${V%.mp4}-720p.mp4"
+    ffmpeg -v error -y -i "$V" -vf "scale=-2:720" -c:v libx264 -crf 27 -preset medium -c:a aac -b:a 128k -movflags +faststart "$VB"
+  fi
+  rm -f "$VB.envio-v3.json"
+  node "$BOT" $DRY "$VB" "futviral · $ROT · ${DUR}s
 $ST
 $(head -c 600 "$E/legenda.txt")$EXTRA" || echo "falhou o envio ao bot"
+fi
 echo "$ST"
 # futviral ainda não vai ao TikTok/Instagram (metricool-pub2 não configurado para ele).
