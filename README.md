@@ -33,6 +33,8 @@ Eurão · Jovem Pan Esportes · Jozão · Fabrizio Romano · Chico Garcia · Tod
 | 9 | Sáb/dom: longo 16:9 "A semana explicada" | `auto/roteiro-longo.md` → `auto/longo.sh` | 🤖 + ⚙️ |
 | 10 | Aprovar o formato, incluir/tirar canais, ligar a agenda | `canais.json`, `systemd/` | 🧠 sessão com o Nei |
 
+Desde 09/11/2026 os passos pesados (Whisper, retempo, voz local, render e encode) passam pela vaga da máquina (`motor/vaga.sh` → `~/projetos/wifi/scripts/fila-vaga`; saída 75 = máquina ocupada, avisa e não usa a pauta) e cada rodada grava início e fim no placar (`~/projetos/wifi/scripts/rodada hoje`).
+
 Rodada à mão:
 
 ```bash

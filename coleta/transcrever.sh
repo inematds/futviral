@@ -7,6 +7,9 @@ AQUI="$(cd "$(dirname "$0")" && pwd)"
 TX="${TX:-$HOME/projetos/output/futviral/coleta/tx}"
 VOX="$HOME/projetos/inemavox"
 MODELO="${MODELO:-large-v3}"
+# Whisper na vaga gpu da máquina (motor/vaga.sh → wifi/scripts/fila-vaga, 09/11/2026); legenda e download ficam fora da vaga.
+# Espera até GPU_ESPERA_MIN (45 min por vídeo; o rodar.sh dá 7200 s ao todo); estourou → sai 75 (máquina ocupada).
+VAGA="$AQUI/../motor/vaga.sh"; M="$(basename "$(dirname "$AQUI")")"
 for id in "$@"; do
   D="$TX/$id"; mkdir -p "$D"
   if ls "$D"/*.txt >/dev/null 2>&1; then echo "já tem $id"; continue; fi
@@ -32,7 +35,8 @@ for id in "$@"; do
   A=$(ls -S "$D"/audio/*.{wav,m4a,mp3,webm,opus} 2>/dev/null | head -1)
   [ -z "$A" ] && { echo "sem audio $id"; continue; }
   echo "== $id transcrevendo $(date +%T) $A"
-  ( cd "$VOX" && python3 transcrever_v1.py --in "$A" --outdir "$D" --whisper-model "$MODELO" --src "$L" ) > "$D/tx.log" 2>&1 \
-    && echo whisper > "$D/fonte" || echo "falhou tx $id"
+  ( cd "$VOX" && GPU_ESPERA_MIN="${GPU_ESPERA_MIN:-45}" bash "$VAGA" gpu "$M-whisper" python3 transcrever_v1.py --in "$A" --outdir "$D" --whisper-model "$MODELO" --src "$L" ) > "$D/tx.log" 2>&1; rc=$?
+  [ "$rc" = 75 ] && { echo "máquina ocupada: a vaga gpu não abriu a tempo para o Whisper ($id)"; exit 75; }
+  [ "$rc" = 0 ] && echo whisper > "$D/fonte" || echo "falhou tx $id"
 done
 echo "fim $(date +%T)"
