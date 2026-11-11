@@ -29,7 +29,7 @@ Eurão · Jovem Pan Esportes · Jozão · Fabrizio Romano · Chico Garcia · Tod
 | 5 | Confere trechos, números por extenso, 5+ assuntos, aviso de rumor, sem aposta; 1 correção | `auto/checar.py` | ⚙️ script |
 | 6 | Avatar do Nei no estúdio HeyGen (assinatura); se falhar, foto + voz do Nei | `motor/avatar_heygen.sh` / `motor/narrar.py` | ⚙️ script |
 | 7 | Renderiza o vídeo (palco.html quadro a quadro) e compõe o avatar | `motor/gerar_cena.py` + `motor/compor_avatar.sh` | ⚙️ script |
-| 8 | Geração às 9h: o vídeo vai ao bot como prévia. Ao meio-dia publica no YouTube **Inema Club24 (lives24)** e manda o link ao bot (`touch <edição>/SEGURAR` segura) | `auto/publicar.sh` + `auto/publicar-pendente.sh` (yt-pubx) | ⚙️ timer 09:00 / 12:00 |
+| 8 | Geração às 9h: o vídeo vai ao bot como prévia. A partir das 14h o Radar Viral publica no YouTube **Radar Viral (lives24)** e manda o link ao bot (`touch <edição>/SEGURAR` segura) | `auto/publicar.sh` + `auto/publicar-pendente.sh` (yt-pubx) | ⚙️ timer 09:00 / 12:00 |
 | 9 | Sáb/dom: longo 16:9 "A semana explicada" | `auto/roteiro-longo.md` → `auto/longo.sh` | 🤖 + ⚙️ |
 | 10 | Aprovar o formato, incluir/tirar canais, ligar a agenda | `canais.json`, `systemd/` | 🧠 sessão com o Nei |
 
@@ -43,7 +43,7 @@ SEM_AVATAR=1 auto/rodar.sh diario 2026-10-26    # versão com foto, só para o b
 REUSAR_ROTEIRO=1 auto/rodar.sh diario 2026-10-26  # refaz avatar/vídeo/publicação com o roteiro já aprovado
 ```
 
-Agenda (`systemd/futviral-*.timer`, ligada em 26/10/2026): geração às 09:00 (diário seg–sex, semanal no sábado, domingo no domingo) e publicação às 12:00.
+Agenda (`systemd/futviral-*.timer`, ligada em 26/10/2026): geração às 09:00 (diário seg–sex, semanal no sábado, domingo no domingo) e publicação pelo Radar Viral a partir das 14:00.
 
 ## Regras de cada vídeo
 
