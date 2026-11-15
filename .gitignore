@@ -22,3 +22,7 @@ cena-longo.js
 .longo.html
 edicoes/*/claude.log
 auto/usados.tsv.bak-*
+
+# Executor de IA: registros locais
+**/ia-execucoes.jsonl
+auto/ia.lock
